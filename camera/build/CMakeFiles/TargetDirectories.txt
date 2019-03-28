@@ -1,4 +1,0 @@
-/home/aclouditation/COURSES/ECE477/Face-Recognition-Drone/camera/build/CMakeFiles/rebuild_cache.dir
-/home/aclouditation/COURSES/ECE477/Face-Recognition-Drone/camera/build/CMakeFiles/camera.dir
-/home/aclouditation/COURSES/ECE477/Face-Recognition-Drone/camera/build/CMakeFiles/edit_cache.dir
-/home/aclouditation/COURSES/ECE477/Face-Recognition-Drone/camera/build/CMakeFiles/camera_autogen.dir

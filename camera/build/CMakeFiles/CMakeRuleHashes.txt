@@ -1,6 +1,0 @@
-# Hashes of file build rules.
-56c9046ae2b560cead32e91d61c18949 CMakeFiles/camera_autogen
-eebbdf72289bc5b3d13b70f6523196bc qrc_camera.cpp
-61f5f38c971da83c3232970cb37bdfc3 ui_camera.h
-52c2b3c254e4a5e034c9535cfb39caae ui_imagesettings.h
-6189ffb18eb0306fa2d335620380886b ui_videosettings.h

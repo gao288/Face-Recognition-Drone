@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 
 project(camera)
 
+#set(Qt5LOC "${HOME}/Qt/5.13.0/gcc_64")
+#set(CMAKE_PREFIX_PATH Qt5LOC)
+
 set(Qt5LOC "${HOME}/Qt/5.13.0/gcc_64/lib/cmake/")
+# manually specify module location
 set(Qt5Core_DIR                 "${Qt5LOC}/Qt5Core")
 set(Qt5Widgets_DIR              "${Qt5LOC}/Qt5Widgets")
 set(Qt5Gui_DIR                  "${Qt5LOC}/Qt5Gui")
@@ -18,8 +22,8 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED) 
 find_package(Qt5MultimediaWidgets REQUIRED) 
 
-message(STATUS ${Qt5Core_DIR})
-message(STATUS ${Qt5Widgets_VERSION})
+message(STATUS Qt5Core_dir: ${Qt5Core_DIR})
+message(STATUS Qt5Version: ${Qt5Widgets_VERSION})
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(src_dir .)
@@ -33,9 +37,9 @@ foreach(dir ${src_dir})
 	list(APPEND HEADER_SRCS ${${dir_u}_CXX_FILES})
 endforeach(dir ${src_dir})
 
-message(STATUS ${UI_FILES})
-message(STATUS ${${PROJECT_NAME}_SRCS})
-message(STATUS ${HEADER_SRCS})
+#message(STATUS ${UI_FILES})
+#message(STATUS ${${PROJECT_NAME}_SRCS})
+#message(STATUS ${HEADER_SRCS})
 qt5_wrap_ui( UIC_SRCS ${UI_FILES})
 
 set(RESOURCE_FILES ${PROJECT_NAME}.qrc)
