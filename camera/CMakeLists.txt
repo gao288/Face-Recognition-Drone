@@ -41,7 +41,7 @@ qt5_wrap_ui( UIC_SRCS ${UI_FILES})
 set(RESOURCE_FILES ${PROJECT_NAME}.qrc)
 qt5_add_resources(RCC_SRCS ${RESOURCE_FILES}) 
 
-include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_BINARY_DIR}/camera)
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS}
 				${HEADER_SRCS}
 				${UIC_SRCS}
