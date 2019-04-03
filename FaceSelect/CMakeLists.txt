@@ -8,3 +8,11 @@ target_link_libraries(FaceSelect GazeAnalyser)
 target_link_libraries(FaceSelect Utilities)
 
 install (TARGETS FaceSelect DESTINATION bin)
+
+add_executable(tt FaceLandmarkVid.cpp)
+target_link_libraries(tt LandmarkDetector)
+target_link_libraries(tt FaceAnalyser)
+target_link_libraries(tt GazeAnalyser)
+target_link_libraries(tt Utilities)
+
+install (TARGETS tt DESTINATION bin)
