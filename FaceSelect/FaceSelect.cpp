@@ -65,7 +65,6 @@ void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& clnf_models, 
     }
 }
 
-#define POSE_FACTOR 0.1
 int main(int argc, char **argv)
 {
 
@@ -162,16 +161,10 @@ int main(int argc, char **argv)
 
     int frame_count = 0;
 
+    INFO_STREAM("Using a webcam in feature extraction, forcing visualization of tracking to allow quitting the application (press q)");
+    visualizer.vis_track = true;
 
-
-    if (sequence_reader.IsWebcam())
-    {
-        INFO_STREAM("WARNING: using a webcam in feature extraction, forcing visualization of tracking to allow quitting the application (press q)");
-        visualizer.vis_track = true;
-    }
-
-    // For reporting progress
-    double reported_completion = 0;
+    // flag for selecting mode / tracking mode
     bool selecting = true;
 
     INFO_STREAM("Starting tracking");
@@ -284,13 +277,12 @@ int main(int argc, char **argv)
         visualizer.SetObservationFaceAlign(sim_warped_img);
         visualizer.SetObservationPose(LandmarkDetector::GetPose(face_models[selected_model], sequence_reader.fx, sequence_reader.fy, sequence_reader.cx, sequence_reader.cy), face_models[selected_model].detection_certainty);
 
-        if(!selecting) {
-            // cout << pose_estimate[0] << " " << pose_estimate[1] << " " << pose_estimate[2] << " ";
+        // if selected and usb successfully connected
+        if(!selecting && fd > 0) {
             // send signal to micro
-            xoffset += POSE_FACTOR * pose_estimate[0];
-            yoffset += POSE_FACTOR * pose_estimate[1];
-            writeToUART(fd, string("x") + to_string(xoffset) + "\r");
-            writeToUART(fd, string("y") + to_string(yoffset) + "\r");
+            cout << "writing to uart" << endl;
+            writeToUART(fd, string("x") + to_string((int) pose_estimate[1]) + "\r");
+            writeToUART(fd, string("z") + to_string((int) pose_estimate[0]) + "\r");
         }
 
         visualizer.SetFps(fps_tracker.GetFPS());
@@ -307,6 +299,7 @@ int main(int argc, char **argv)
                 active_models[i] = false;
             }
         }
+
         // quit the application
         else if (character_press == 'q')
         {
@@ -325,31 +318,16 @@ int main(int argc, char **argv)
             cout << (selecting?"selecting":"selected") << endl;
         }
 
-        // Reporting progress
-        if (sequence_reader.GetProgress() >= reported_completion / 10.0)
-        {
-            cout << reported_completion * 10 << "% ";
-            if (reported_completion == 10)
-            {
-                cout << endl;
-            }
-            reported_completion = reported_completion + 1;
-        }
-
         // Update the frame count
         frame_count++;
 
         // Grabbing the next frame in the sequence
         rgb_image = sequence_reader.GetNextFrame();
-
     }
-
-    frame_count = 0;
 
     INFO_STREAM("Closing input reader");
     sequence_reader.Close();
     INFO_STREAM("Closed successfully");
-
 
     return 0;
 }
