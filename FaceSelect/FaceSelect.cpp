@@ -3,6 +3,7 @@
 #include "VisualizationUtils.h"
 #include "Visualizer.h"
 #include "SequenceCapture.h"
+#include "GimbalUtil.h"
 #include <RecorderOpenFace.h>
 #include <RecorderOpenFaceParameters.h>
 #include <GazeEstimation.h>
@@ -67,7 +68,8 @@ void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& clnf_models, 
 int main(int argc, char **argv)
 {
 
-    vector<string> arguments = {"-device", "0"};
+    vector<string> arguments = {"-device", "1"};
+    int fd = gimbal_init();
 
     // no arguments: output usage
     LandmarkDetector::FaceModelParameters det_params(arguments);
@@ -276,8 +278,11 @@ int main(int argc, char **argv)
         // Visualize the features
         visualizer.SetObservationFaceAlign(sim_warped_img);
         visualizer.SetObservationPose(LandmarkDetector::GetPose(face_models[selected_model], sequence_reader.fx, sequence_reader.fy, sequence_reader.cx, sequence_reader.cy), face_models[selected_model].detection_certainty);
-        //cout << pose_estimate[0] << " " << pose_estimate[1] << " " << pose_estimate[2] << " ";
-        //cout << pose_estimate[3] << " " << pose_estimate[4] << " " << pose_estimate[5] << endl;
+        if(!selecting) {
+            //cout << pose_estimate[0] << " " << pose_estimate[1] << " " << pose_estimate[2] << " ";
+            writeToUART(fd, string("x") + to_string(int(pose_estimate[0])) + "\r");
+            writeToUART(fd, string("y") + to_string(int(pose_estimate[1])) + "\r");
+        }
 
         visualizer.SetFps(fps_tracker.GetFPS());
 
