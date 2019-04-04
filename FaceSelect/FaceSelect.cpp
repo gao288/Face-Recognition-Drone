@@ -65,11 +65,16 @@ void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& clnf_models, 
     }
 }
 
+#define POSE_FACTOR 0.1
 int main(int argc, char **argv)
 {
 
     vector<string> arguments = {"-device", "1"};
-    int fd = gimbal_init();
+
+    int fd = gimbal_init(); // return the usb port
+    int xoffset = 0;
+    int yoffset = 0;
+    int zoffset = 0;
 
     // no arguments: output usage
     LandmarkDetector::FaceModelParameters det_params(arguments);
@@ -278,10 +283,14 @@ int main(int argc, char **argv)
         // Visualize the features
         visualizer.SetObservationFaceAlign(sim_warped_img);
         visualizer.SetObservationPose(LandmarkDetector::GetPose(face_models[selected_model], sequence_reader.fx, sequence_reader.fy, sequence_reader.cx, sequence_reader.cy), face_models[selected_model].detection_certainty);
+
         if(!selecting) {
-            //cout << pose_estimate[0] << " " << pose_estimate[1] << " " << pose_estimate[2] << " ";
-            writeToUART(fd, string("x") + to_string(int(pose_estimate[0])) + "\r");
-            writeToUART(fd, string("y") + to_string(int(pose_estimate[1])) + "\r");
+            // cout << pose_estimate[0] << " " << pose_estimate[1] << " " << pose_estimate[2] << " ";
+            // send signal to micro
+            xoffset += POSE_FACTOR * pose_estimate[0];
+            yoffset += POSE_FACTOR * pose_estimate[1];
+            writeToUART(fd, string("x") + to_string(xoffset) + "\r");
+            writeToUART(fd, string("y") + to_string(yoffset) + "\r");
         }
 
         visualizer.SetFps(fps_tracker.GetFPS());
